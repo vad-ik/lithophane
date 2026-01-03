@@ -1,5 +1,8 @@
 package com.github.vad_ik.lithophane.ui.models.methods;
 
+import com.github.vad_ik.lithophane.models.methods.MethodsGen;
+import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.service.methods.VoidMethod;
 import com.github.vad_ik.lithophane.ui.models.SettingsPanel;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,15 +22,18 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SettingsBlock extends VerticalLayout {
 
-    private final ComboBox<Method> comboBox = new ComboBox<>("Метод");
+    private final ComboBox<MethodsGen> comboBox = new ComboBox<>("Метод");
     private final VerticalLayout methodSettings = new VerticalLayout();
+    private final SettingsBlockBuilder blockBuilder;
+    private ArrayList<MethodsParam> params;
 
-    private final List<Method> methods;
+    private final List<MethodsGen> methods;
     @Getter
     @Setter
     private SettingsPanel parentPanel;
 
-    public SettingsBlock(List<Method> methods) {
+    public SettingsBlock(SettingsBlockBuilder blockBuilder, List<MethodsGen> methods) {
+        this.blockBuilder = blockBuilder;
         this.methods = methods;
         initChangeMethodSettings();
         getStyle()
@@ -34,34 +41,36 @@ public class SettingsBlock extends VerticalLayout {
                 .set("border-radius", "8px")
                 .set("padding", "20px");
         log.info("создан блок настроек");
-
     }
 
     private void initChangeMethodSettings() {
         comboBox.setItems(methods);
-        comboBox.setItemLabelGenerator(Method::getName);
+        comboBox.setItemLabelGenerator(MethodsGen::getName);
         add(comboBox);
         add(methodSettings);
         comboBox.addValueChangeListener(e -> {
 
-            log.info("выбран метод {}",e.getValue().getName());
-            if (e.getValue().getClass().equals(Method.voidMethod.class)){
+            log.info("выбран метод {}", e.getValue().getName());
+            if (e.getValue().getClass().equals(VoidMethod.class)) {
                 parentPanel.delBlock(this);
                 return;
-            }else {
+            } else {
                 parentPanel.update();
             }
             methodSettings.removeAll();
-            methodSettings.add(e.getValue().getSettings());
+            params = e.getValue().getParams();
+            methodSettings.add(blockBuilder.build(e.getValue(), params));
         });
     }
-    public Mat apply(Mat activeImage){
-        if (comboBox.getValue()!=null) {
-            return comboBox.getValue().apply(activeImage);
+
+    public Mat apply(Mat activeImage) {
+        if (comboBox.getValue() != null) {
+            return comboBox.getValue().apply(activeImage, params);
         }
         return null;
     }
-    public Method getActiveMethod(){
+
+    public MethodsGen getActiveMethod() {
         return comboBox.getValue();
     }
 }

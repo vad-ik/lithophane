@@ -1,5 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods;
 
+import com.github.vad_ik.lithophane.models.methods.MethodsGen;
+import com.github.vad_ik.lithophane.models.methods.MethodsParam;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -7,11 +9,28 @@ import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
+import static com.github.vad_ik.lithophane.utils.ExceptionUtils.throwIfNumberOfParametersIsNotEqual;
+
 @Slf4j
 @Service
-public class KMeans {
+public class KMeans implements MethodsGen {
 
-    public Mat applyKMeansToImage(Mat img, int k) {
+    @Override
+    public String getName() {
+        return "Метод k-средних (k-means clustering)";
+    }
+
+    @Override
+    public ArrayList<MethodsParam> getParams() {
+        ArrayList<MethodsParam> params=new ArrayList<>(1);
+        params.add(new MethodsParam(0,1000,1,false,"Количество кластеров",5));
+        return params;
+    }
+
+    public Mat apply (Mat img, ArrayList<MethodsParam> params) {
+        throwIfNumberOfParametersIsNotEqual(params,1, getName());
         log.info("началась кластеризация KMeans");
         Mat floatImg = new Mat();
         img.convertTo(floatImg, CvType.CV_32F);
@@ -26,7 +45,7 @@ public class KMeans {
 
         Core.kmeans(
                 data,
-                k,
+                (int) params.getFirst().getVal(),
                 labels,
                 new TermCriteria(TermCriteria.EPS + TermCriteria.MAX_ITER, 100, 0.1),
                 10,

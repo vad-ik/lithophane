@@ -1,0 +1,13 @@
+package com.github.vad_ik.lithophane.models.methods;
+
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.opencv.core.Mat;
+
+import java.util.ArrayList;
+
+public interface MethodsGen {
+    public String getName();
+    public ArrayList<MethodsParam> getParams();
+    public Mat apply(Mat mat, ArrayList<MethodsParam> params);
+
+}
