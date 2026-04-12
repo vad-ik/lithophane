@@ -65,9 +65,15 @@ public class SettingsBlock extends VerticalLayout {
 
     public Mat apply(Mat activeImage) {
         if (comboBox.getValue() != null) {
-            return comboBox.getValue().apply(activeImage, params);
+            Long time =System.currentTimeMillis();
+            log.info("метод {} начал работу", getActiveMethod().getName());
+            Mat ans= comboBox.getValue().apply(activeImage, params);
+            log.info("метод {} закончил работу за {} с", getActiveMethod().getName(),(System.currentTimeMillis()-time)/1000.0);
+            return ans;
         }
-        return null;
+        log.error("метод {} вернул нулевой результат",getActiveMethod().getName());
+        throw new RuntimeException("Неверный блок настроек");
+
     }
 
     public MethodsGen getActiveMethod() {

@@ -50,10 +50,9 @@ public class GaussianFilter implements MethodsGen {
          double sigmaY= params.get(3).getVal();
 
         if (w <= 0 || w % 2 != 1 || h <= 0 || h % 2 != 1) {
-            log.error("получены некоректные данные для Гауссовского фильтра");
+            log.error("получены некоректные данные для Гауссовского фильтра {},{},{},{}",w,h,sigmaX,sigmaY);
         }
-        Mat out = new Mat();
-        Imgproc.GaussianBlur(original, out, new Size(w, h), sigmaX, sigmaY);
-        return out;
+        Imgproc.GaussianBlur(original, original, new Size(w, h), sigmaX, sigmaY);
+        return original;
     }
 }

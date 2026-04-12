@@ -36,10 +36,9 @@ public class MedianFilter implements MethodsGen {
         throwIfNumberOfParametersIsNotEqual(params,1, getName());
         int h=(int) params.get(0).getVal();
         if (h <= 0 || h % 2 != 1) {
-            log.error("получены некоректные данные для медианного фильтра");
+            log.error("получены некоректные данные для медианного фильтра {}",h);
         }
-        Mat out = new Mat();
-        Imgproc.medianBlur(original, out, h);
-        return out;
+        Imgproc.medianBlur(original, original, h);
+        return original;
     }
 }

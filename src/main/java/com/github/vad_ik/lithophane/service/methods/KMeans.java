@@ -24,55 +24,69 @@ public class KMeans implements MethodsGen {
 
     @Override
     public ArrayList<MethodsParam> getParams() {
-        ArrayList<MethodsParam> params=new ArrayList<>(1);
-        params.add(new MethodsParam(0,1000,1,false,"Количество кластеров",5));
+        ArrayList<MethodsParam> params = new ArrayList<>(1);
+        params.add(new MethodsParam(0, 1000, 1, false, "Количество кластеров", 5));
         return params;
     }
 
-    public Mat apply (Mat img, ArrayList<MethodsParam> params) {
-        throwIfNumberOfParametersIsNotEqual(params,1, getName());
-        log.info("началась кластеризация KMeans");
+    public Mat apply(Mat img, ArrayList<MethodsParam> params) {
+
+
         Mat floatImg = new Mat();
-        img.convertTo(floatImg, CvType.CV_32F);
-
-        Mat data = floatImg.reshape(
-                floatImg.channels(),
-                floatImg.rows() * floatImg.cols()
-        );
-
         Mat labels = new Mat();
         Mat centers = new Mat();
+        Mat data = null;
+        try {
+            throwIfNumberOfParametersIsNotEqual(params, 1, getName());
+            log.info("началась кластеризация KMeans");
+            img.convertTo(floatImg, CvType.CV_32F);
 
-        Core.kmeans(
-                data,
-                (int) params.getFirst().getVal(),
-                labels,
-                new TermCriteria(TermCriteria.EPS + TermCriteria.MAX_ITER, 100, 0.1),
-                10,
-                Core.KMEANS_PP_CENTERS,
-                centers
-        );
+            data = floatImg.reshape(
+                    floatImg.channels(),
+                    floatImg.rows() * floatImg.cols()
+            );
 
-        centers.convertTo(centers, CvType.CV_8U);
-        Mat result = new Mat(img.size(), CvType.CV_8UC3);
 
-        int[] labelBuf = new int[1];
-        int index = 0;
-        for (int y = 0; y < img.rows(); y++) {
-            for (int x = 0; x < img.cols(); x++) {
+            Core.kmeans(
+                    data,
+                    (int) params.getFirst().getVal(),
+                    labels,
+                    new TermCriteria(TermCriteria.EPS + TermCriteria.MAX_ITER, 100, 0.1),
+                    10,
+                    Core.KMEANS_PP_CENTERS,
+                    centers
+            );
 
-                labels.get(index++, 0, labelBuf);
-                int label = labelBuf[0];
+            centers.convertTo(centers, CvType.CV_8U);
+            Mat result = new Mat(img.size(), CvType.CV_8UC3);
 
-                double b = centers.get(label, 0)[0];
-                double g = centers.get(label, 1)[0];
-                double r = centers.get(label, 2)[0];
+            int[] labelBuf = new int[1];
+            int index = 0;
+            for (int y = 0; y < img.rows(); y++) {
+                for (int x = 0; x < img.cols(); x++) {
 
-                result.put(y, x, b, g, r);
+                    labels.get(index++, 0, labelBuf);
+                    int label = labelBuf[0];
+
+                    double b = centers.get(label, 0)[0];
+                    double g = centers.get(label, 1)[0];
+                    double r = centers.get(label, 2)[0];
+
+                    result.put(y, x, b, g, r);
+                }
+            }
+
+            log.info("кластеризация KMeans закончилась");
+            return result;
+        } finally {
+            // 7. Освобождение ВСЕХ временных матриц, КРОМЕ result
+            floatImg.release();
+            labels.release();
+            centers.release();
+            img.release();
+            if (data != null) {
+                data.release();
             }
         }
-
-        log.info("кластеризация KMeans закончилась");
-        return result;
     }
 }

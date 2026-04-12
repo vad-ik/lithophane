@@ -72,13 +72,7 @@ public class SettingsPanel extends VerticalLayout {
                 if (settingsBlock.getParentPanel() == null || settingsBlock.getActiveMethod()==null) {
                     continue;
                 }
-                Mat tmp = settingsBlock.apply(newImage);
-                if (tmp != null) {
-                    newImage = tmp;
-                } else {
-                    log.error("метод {} вернул нулевой результат",settingsBlock.getActiveMethod().getName());
-                    throw new RuntimeException("Неверный блок настроек");
-                }
+              newImage= settingsBlock.apply(newImage);
             }
 
             imageController.setPrepareImage(MatUtils.convertMatToVaadinImage(newImage));

@@ -41,8 +41,8 @@ public class NormalizedBlockFilter implements MethodsGen {
         throwIfNumberOfParametersIsNotEqual(params,2, getName());
         int w = (int) params.get(0).getVal();
         int h = (int) params.get(1).getVal();
-        Mat out = new Mat();
-        Imgproc.blur(original, out, new Size(w, h), new Point(-1, -1));
-        return out;
+
+        Imgproc.blur(original, original, new Size(w, h), new Point(-1, -1));
+        return original;
     }
 }
