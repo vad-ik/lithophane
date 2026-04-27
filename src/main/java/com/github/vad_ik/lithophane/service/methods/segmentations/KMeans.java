@@ -1,7 +1,8 @@
-package com.github.vad_ik.lithophane.service.methods;
+package com.github.vad_ik.lithophane.service.methods.segmentations;
 
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -28,6 +29,12 @@ public class KMeans implements MethodsGen {
         params.add(new MethodsParam(0, 1000, 1, false, "Количество кластеров", 5));
         return params;
     }
+
+    @Override
+    public Type getType() {
+        return Type.segmentations;
+    }
+
 
     public Mat apply(Mat img, ArrayList<MethodsParam> params) {
 

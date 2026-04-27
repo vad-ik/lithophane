@@ -1,7 +1,8 @@
-package com.github.vad_ik.lithophane.service.methods.morphology;
+package com.github.vad_ik.lithophane.service.methods.simplificationOfBoundaries;
 
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -17,6 +18,10 @@ public class Morphology implements MethodsGen {
     @Override
     public String getName() {
         return "Morphology";
+    }
+    @Override
+    public Type getType() {
+        return Type.simplificationOfBoundaries;
     }
 
     @Override

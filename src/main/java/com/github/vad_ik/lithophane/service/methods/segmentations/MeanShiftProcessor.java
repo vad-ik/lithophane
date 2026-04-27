@@ -1,7 +1,8 @@
-package com.github.vad_ik.lithophane.service.methods.meanShiftSegmentation;
+package com.github.vad_ik.lithophane.service.methods.segmentations;
 
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -26,6 +27,12 @@ public class MeanShiftProcessor implements MethodsGen {
         params.add(new MethodsParam(0, 2, 1, false, "уровни сглаживания", 1));
         return params;
     }
+
+    @Override
+    public Type getType() {
+        return Type.segmentations;
+    }
+
 
     public Mat apply(Mat src, ArrayList<MethodsParam> params) {
         if (src == null || src.empty()) {

@@ -2,6 +2,7 @@ package com.github.vad_ik.lithophane.service.methods.Filter;
 
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -19,6 +20,11 @@ public class MedianFilter implements MethodsGen {
     @Override
     public String getName() {
         return "Медианный фильтр";
+    }
+
+    @Override
+    public Type getType() {
+        return Type.smoothing;
     }
 
     @Override
