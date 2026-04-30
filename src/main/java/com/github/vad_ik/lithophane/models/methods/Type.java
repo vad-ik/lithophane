@@ -9,7 +9,8 @@ import lombok.Getter;
 public enum Type {
     segmentations("Кластеризация"),
     smoothing("Сглаживание"),
-    simplificationOfBoundaries("Упрощение границ");
+    simplificationOfBoundaries("Упрощение границ"),
+    comand("");
 
  private final    String name;
 }

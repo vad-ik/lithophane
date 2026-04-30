@@ -2,10 +2,15 @@ package com.github.vad_ik.lithophane.ui.models.methods;
 
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.Type;
 import com.github.vad_ik.lithophane.service.methods.VoidMethod;
 import com.github.vad_ik.lithophane.ui.models.SettingsPanel;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +20,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -34,7 +43,17 @@ public class SettingsBlock extends VerticalLayout {
 
     public SettingsBlock(SettingsBlockBuilder blockBuilder, List<MethodsGen> methods) {
         this.blockBuilder = blockBuilder;
-        this.methods = methods;
+        this.methods = methods.stream()
+                .sorted((a, b) -> {
+                    if (a instanceof VoidMethod) return -1;
+                    if (b instanceof VoidMethod) return 1;
+
+                    int typeCompare = a.getType().compareTo(b.getType());
+                    if (typeCompare != 0) return typeCompare;
+
+                    return a.getName().compareTo(b.getName());
+                })
+                .toList();
         initChangeMethodSettings();
         getStyle()
                 .set("border", "2px solid #4a90e2")
@@ -46,10 +65,33 @@ public class SettingsBlock extends VerticalLayout {
     private void initChangeMethodSettings() {
         comboBox.setItems(methods);
         comboBox.setItemLabelGenerator(MethodsGen::getName);
+        comboBox.setRenderer(new ComponentRenderer<>(item -> {
+            VerticalLayout layout = new VerticalLayout();
+            layout.setPadding(false);
+            layout.setSpacing(false);
+
+            if (!(item instanceof VoidMethod)) {
+                Span type = new Span(item.getType().getName());
+                type.getStyle()
+                        .set("font-size", "11px")
+                        .set("color", "var(--lumo-secondary-text-color)");
+
+                Span name = new Span(item.getName());
+
+                layout.add(type, name);
+            } else {
+                Span name = new Span(item.getName());
+                name.getStyle().set("font-weight", "bold");
+                layout.add(name);
+            }
+
+            return layout;
+        }));
         add(comboBox);
+
+
         add(methodSettings);
         comboBox.addValueChangeListener(e -> {
-
             log.info("выбран метод {}", e.getValue().getName());
             if (e.getValue().getClass().equals(VoidMethod.class)) {
                 parentPanel.delBlock(this);
@@ -79,4 +121,6 @@ public class SettingsBlock extends VerticalLayout {
     public MethodsGen getActiveMethod() {
         return comboBox.getValue();
     }
+
+
 }

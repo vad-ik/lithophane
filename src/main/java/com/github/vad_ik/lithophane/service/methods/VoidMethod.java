@@ -16,7 +16,7 @@ public class VoidMethod implements MethodsGen {
 
     @Override
     public Type getType() {
-        return null;
+        return Type.comand;
     }
 
     @Override
