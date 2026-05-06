@@ -51,7 +51,8 @@ public class BilateralFilter implements MethodsGen {
             double sigmaColor= params.get(1).getVal();
             double sigmaSpace= params.get(2).getVal();
 
-        Imgproc.bilateralFilter(original, original, d, sigmaColor, sigmaSpace);
-        return original;
+        Mat result = new Mat();
+        Imgproc.bilateralFilter(original, result, d, sigmaColor, sigmaSpace);
+        return result;
     }
 }
