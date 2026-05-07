@@ -5,7 +5,7 @@ import com.github.vad_ik.lithophane.ui.models.methods.SettingsBlock;
 import com.github.vad_ik.lithophane.utils.MatUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.server.streams.InMemoryUploadHandler;
@@ -30,6 +30,7 @@ public class SettingsPanel extends VerticalLayout {
     private final VerticalLayout methods = new VerticalLayout();
     @Autowired
     private ObjectProvider<SettingsBlock> settingsBlockProvider;
+    private Anchor downloadLink;
 
     private Mat activeImage;
 
@@ -37,6 +38,7 @@ public class SettingsPanel extends VerticalLayout {
 
         this.imageController = imageController;
         initUploadButton();
+        initSaveButton();
         addSettingsBlock();
         initActiveButton();
         activeImage = Imgcodecs.imread("src/main/resources/static/image/void.jpg");
@@ -60,7 +62,6 @@ public class SettingsPanel extends VerticalLayout {
 
         upload.setUploadButton(uploadButton);
         add(upload);
-
     }
 
 
@@ -69,15 +70,28 @@ public class SettingsPanel extends VerticalLayout {
         active.addClickListener(_ -> {
             Mat newImage = activeImage.clone();
             for (SettingsBlock settingsBlock : settingsBlocks) {
-                if (settingsBlock.getParentPanel() == null || settingsBlock.getActiveMethod()==null) {
+                if (settingsBlock.getParentPanel() == null || settingsBlock.getActiveMethod() == null) {
                     continue;
                 }
-              newImage= settingsBlock.apply(newImage);
+                newImage = settingsBlock.apply(newImage);
             }
 
             imageController.setPrepareImage(MatUtils.convertMatToVaadinImage(newImage));
+            downloadLink.getElement().setAttribute("href",
+                    imageController.getPrepareImage().getSrc()
+            );
         });
         add(active);
+    }
+
+    private void initSaveButton(){
+        downloadLink = new Anchor();
+        downloadLink.getElement().setAttribute("download", true);
+
+        Button downloadButton = new Button("Сохранить изображение");
+        downloadLink.add(downloadButton);
+
+        add(downloadLink);
     }
 
     public void delBlock(SettingsBlock block) {
@@ -85,7 +99,7 @@ public class SettingsPanel extends VerticalLayout {
         update();
     }
 
-    public void addSettingsBlock() {
+    private void addSettingsBlock() {
         settingsBlocks.add(createSettingsBlock());
         update();
         add(methods);
