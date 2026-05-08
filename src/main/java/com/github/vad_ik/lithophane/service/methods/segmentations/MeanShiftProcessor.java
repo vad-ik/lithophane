@@ -46,7 +46,7 @@ public class MeanShiftProcessor implements MethodsGen {
         // Параметры
         double sp = params.get(0).getVal(); // spatial radius
         double sr = params.get(1).getVal(); // color radius
-        int maxLevel = (int) params.get(2).getVal() ;
+        int maxLevel = (int) params.get(2).getVal();
 
         Mat dst = new Mat();
 

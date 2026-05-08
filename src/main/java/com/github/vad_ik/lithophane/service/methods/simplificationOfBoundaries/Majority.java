@@ -5,8 +5,6 @@ import com.github.vad_ik.lithophane.models.methods.MethodsParam;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ public class Majority implements MethodsGen {
     public String getName() {
         return "Majority";
     }
+
     @Override
     public Type getType() {
         return Type.simplificationOfBoundaries;
@@ -42,6 +41,7 @@ public class Majority implements MethodsGen {
 
         return smoothByMajority(img, (int) size);
     }
+
     public Mat smoothByMajority(Mat input, int radius) {
         Mat result = input.clone();
 

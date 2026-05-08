@@ -20,6 +20,7 @@ public class SmoothByContours implements MethodsGen {
     public String getName() {
         return "SmoothByContours";
     }
+
     @Override
     public Type getType() {
         return Type.simplificationOfBoundaries;
@@ -38,6 +39,7 @@ public class SmoothByContours implements MethodsGen {
 
         return smoothByContours(img, size);
     }
+
     public Mat smoothByContours(Mat input, double epsilonFactor) {
         Mat result = Mat.zeros(input.size(), input.type());
 
@@ -98,10 +100,10 @@ public class SmoothByContours implements MethodsGen {
 
                 if (parent < 0) {
                     // заливаем цветом
-                    Imgproc.drawContours(result, Arrays.asList(approx), -1, new Scalar(color), -1);
+                    Imgproc.drawContours(result, List.of(approx), -1, new Scalar(color), -1);
                 } else {
                     // это "дырка" — заливаем чёрным (или фоном)
-                    Imgproc.drawContours(result, Arrays.asList(approx), -1, new Scalar(0,0,0), -1);
+                    Imgproc.drawContours(result, List.of(approx), -1, new Scalar(0, 0, 0), -1);
                 }
             }
         }

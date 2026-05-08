@@ -15,7 +15,6 @@ import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +22,11 @@ import java.util.ArrayList;
 
 @Slf4j
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Scope("vaadin-session")
 public class SettingsPanel extends VerticalLayout {
-    private ImageController imageController;
     private final ArrayList<SettingsBlock> settingsBlocks = new ArrayList<>();
     private final VerticalLayout methods = new VerticalLayout();
+    private ImageController imageController;
     @Autowired
     private ObjectProvider<SettingsBlock> settingsBlockProvider;
     private Anchor downloadLink;
@@ -68,15 +67,18 @@ public class SettingsPanel extends VerticalLayout {
     private void initActiveButton() {
         Button active = new Button("Применить");
         active.addClickListener(_ -> {
-            Mat newImage = activeImage.clone();
+            Mat image = activeImage.clone();
             for (SettingsBlock settingsBlock : settingsBlocks) {
                 if (settingsBlock.getParentPanel() == null || settingsBlock.getActiveMethod() == null) {
                     continue;
                 }
-                newImage = settingsBlock.apply(newImage);
+                Mat newImage = settingsBlock.apply(image);
+                image.release();
+                image = newImage;
             }
 
-            imageController.setPrepareImage(MatUtils.convertMatToVaadinImage(newImage));
+            imageController.setPrepareImage(MatUtils.convertMatToVaadinImage(image));
+            image.release();
             downloadLink.getElement().setAttribute("href",
                     imageController.getPrepareImage().getSrc()
             );
@@ -84,7 +86,7 @@ public class SettingsPanel extends VerticalLayout {
         add(active);
     }
 
-    private void initSaveButton(){
+    private void initSaveButton() {
         downloadLink = new Anchor();
         downloadLink.getElement().setAttribute("download", true);
 

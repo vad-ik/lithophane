@@ -23,5 +23,4 @@ public class MethodsParam {
         this.description = description;
         this.defaultValue = defaultValue;
     }
-
 }

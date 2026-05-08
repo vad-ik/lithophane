@@ -3,14 +3,18 @@ package com.github.vad_ik.lithophane.service.methods.segmentations;
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
 import com.github.vad_ik.lithophane.models.methods.Type;
-import org.opencv.core.*;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
-public class MedianCutQuantization  implements MethodsGen {
+public class MedianCutQuantization implements MethodsGen {
 
     @Override
     public String getName() {
@@ -33,72 +37,7 @@ public class MedianCutQuantization  implements MethodsGen {
     public Mat apply(Mat img, ArrayList<MethodsParam> params) {
         int k = (int) params.get(0).getVal();
 
-        return applyMedianCut (img,k);
-
-    }
-
-    static class ColorBox {
-        List<double[]> pixels;
-
-        double rMin, rMax, gMin, gMax, bMin, bMax;
-
-        ColorBox(List<double[]> pixels) {
-            this.pixels = pixels;
-            computeBounds();
-        }
-
-        void computeBounds() {
-            rMin = gMin = bMin = Double.MAX_VALUE;
-            rMax = gMax = bMax = Double.MIN_VALUE;
-
-            for (double[] p : pixels) {
-                rMin = Math.min(rMin, p[0]);
-                rMax = Math.max(rMax, p[0]);
-                gMin = Math.min(gMin, p[1]);
-                gMax = Math.max(gMax, p[1]);
-                bMin = Math.min(bMin, p[2]);
-                bMax = Math.max(bMax, p[2]);
-            }
-        }
-
-        int longestChannel() {
-            double rRange = rMax - rMin;
-            double gRange = gMax - gMin;
-            double bRange = bMax - bMin;
-
-            if (rRange >= gRange && rRange >= bRange) return 0;
-            if (gRange >= rRange && gRange >= bRange) return 1;
-            return 2;
-        }
-
-        ColorBox[] splitBox() {
-            int channel = longestChannel();
-
-            pixels.sort(Comparator.comparingDouble(p -> p[channel]));
-
-            int median = pixels.size() / 2;
-
-            List<double[]> first = pixels.subList(0, median);
-            List<double[]> second = pixels.subList(median, pixels.size());
-
-            return new ColorBox[]{
-                    new ColorBox(new ArrayList<>(first)),
-                    new ColorBox(new ArrayList<>(second))
-            };
-        }
-
-        double[] getAverageColor() {
-            double r = 0, g = 0, b = 0;
-
-            for (double[] p : pixels) {
-                r += p[0];
-                g += p[1];
-                b += p[2];
-            }
-
-            int size = pixels.size();
-            return new double[]{r / size, g / size, b / size};
-        }
+        return applyMedianCut(img, k);
     }
 
     public Mat applyMedianCut(Mat input, int k) {
@@ -170,5 +109,69 @@ public class MedianCutQuantization  implements MethodsGen {
 
 
         return result;
+    }
+
+    static class ColorBox {
+        List<double[]> pixels;
+
+        double rMin, rMax, gMin, gMax, bMin, bMax;
+
+        ColorBox(List<double[]> pixels) {
+            this.pixels = pixels;
+            computeBounds();
+        }
+
+        void computeBounds() {
+            rMin = gMin = bMin = Double.MAX_VALUE;
+            rMax = gMax = bMax = Double.MIN_VALUE;
+
+            for (double[] p : pixels) {
+                rMin = Math.min(rMin, p[0]);
+                rMax = Math.max(rMax, p[0]);
+                gMin = Math.min(gMin, p[1]);
+                gMax = Math.max(gMax, p[1]);
+                bMin = Math.min(bMin, p[2]);
+                bMax = Math.max(bMax, p[2]);
+            }
+        }
+
+        int longestChannel() {
+            double rRange = rMax - rMin;
+            double gRange = gMax - gMin;
+            double bRange = bMax - bMin;
+
+            if (rRange >= gRange && rRange >= bRange) return 0;
+            if (gRange >= rRange && gRange >= bRange) return 1;
+            return 2;
+        }
+
+        ColorBox[] splitBox() {
+            int channel = longestChannel();
+
+            pixels.sort(Comparator.comparingDouble(p -> p[channel]));
+
+            int median = pixels.size() / 2;
+
+            List<double[]> first = pixels.subList(0, median);
+            List<double[]> second = pixels.subList(median, pixels.size());
+
+            return new ColorBox[]{
+                    new ColorBox(new ArrayList<>(first)),
+                    new ColorBox(new ArrayList<>(second))
+            };
+        }
+
+        double[] getAverageColor() {
+            double r = 0, g = 0, b = 0;
+
+            for (double[] p : pixels) {
+                r += p[0];
+                g += p[1];
+                b += p[2];
+            }
+
+            int size = pixels.size();
+            return new double[]{r / size, g / size, b / size};
+        }
     }
 }

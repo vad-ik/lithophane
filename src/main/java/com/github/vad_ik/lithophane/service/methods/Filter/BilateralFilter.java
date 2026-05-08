@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 import static com.github.vad_ik.lithophane.utils.ExceptionUtils.throwIfNumberOfParametersIsNotEqual;
-import static com.github.vad_ik.lithophane.utils.VaadinUtils.getNumberField;
 
 @Service
 @Slf4j
@@ -30,11 +29,11 @@ public class BilateralFilter implements MethodsGen {
 
     @Override
     public ArrayList<MethodsParam> getParams() {
-        ArrayList<MethodsParam> params=new ArrayList<>(4);
-        params.add(new MethodsParam(1,1001,2,false,"Диаметр  окна (нечетное)",5));
+        ArrayList<MethodsParam> params = new ArrayList<>(4);
+        params.add(new MethodsParam(1, 1001, 2, false, "Диаметр  окна (нечетное)", 5));
 
-        params.add(new MethodsParam(0,1000,0.1,true,"Отклонение в цветовом пространстве (небольшие значения ≈ 10 сохраняют границы, большие значения ≈ 100 размывают объекты)",0));
-        params.add(new MethodsParam(0,1000,0.1,true,"Отклонение в координатном пространстве (больше значения имеет ближайшие пиксели)",0));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "Отклонение в цветовом пространстве (небольшие значения ≈ 10 сохраняют границы, большие значения ≈ 100 размывают объекты)", 0));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "Отклонение в координатном пространстве (больше значения имеет ближайшие пиксели)", 0));
         return params;
     }
 
@@ -44,12 +43,12 @@ public class BilateralFilter implements MethodsGen {
      * @param sigmaColor: Стандартное отклонение в цветовом пространстве.
      * @param sigmaSpace: Стандартное отклонение в координатном пространстве (в пикселях)
      **/
-    public Mat apply(Mat original,ArrayList<MethodsParam> params) {
+    public Mat apply(Mat original, ArrayList<MethodsParam> params) {
 
-        throwIfNumberOfParametersIsNotEqual(params,3, getName());
-            int d=(int) params.get(0).getVal();
-            double sigmaColor= params.get(1).getVal();
-            double sigmaSpace= params.get(2).getVal();
+        throwIfNumberOfParametersIsNotEqual(params, 3, getName());
+        int d = (int) params.get(0).getVal();
+        double sigmaColor = params.get(1).getVal();
+        double sigmaSpace = params.get(2).getVal();
 
         Mat result = new Mat();
         Imgproc.bilateralFilter(original, result, d, sigmaColor, sigmaSpace);

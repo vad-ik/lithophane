@@ -6,8 +6,6 @@ import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,6 +20,7 @@ public class RemoveSmallRegions implements MethodsGen {
     public String getName() {
         return "Удалить маленькие области";
     }
+
     @Override
     public Type getType() {
         return Type.simplificationOfBoundaries;
@@ -40,6 +39,7 @@ public class RemoveSmallRegions implements MethodsGen {
 
         return removeSmallRegions(img, (int) size);
     }
+
     public Mat removeSmallRegions(Mat input, int minSize) {
         Mat result = input.clone();
 

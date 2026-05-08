@@ -44,36 +44,6 @@ public class Felzenszwalb implements MethodsGen {
         return segment(img, sigma, k, (int) minSize);
     }
 
-    // Структура для хранения ребра графа
-    private class Edge implements Comparable<Edge> {
-        int u, v;
-        double weight;
-
-        Edge(int u, int v, double weight) {
-            this.u = u;
-            this.v = v;
-            this.weight = weight;
-        }
-
-        @Override
-        public int compareTo(Edge other) {
-            return Double.compare(this.weight, other.weight);
-        }
-    }
-
-    // Структура для хранения информации о компоненте
-    private class Component {
-        int parent;
-        int size;
-        double threshold;
-
-        Component(int parent, int size, double threshold) {
-            this.parent = parent;
-            this.size = size;
-            this.threshold = threshold;
-        }
-    }
-
     // Метод для нахождения корня компонента (сжатие пути)
     private int find(List<Component> components, int x) {
         if (components.get(x).parent != x) {
@@ -248,5 +218,35 @@ public class Felzenszwalb implements MethodsGen {
             diff += Math.pow(pixel1[i] - pixel2[i], 2);
         }
         return Math.sqrt(diff);
+    }
+
+    // Структура для хранения ребра графа
+    private class Edge implements Comparable<Edge> {
+        int u, v;
+        double weight;
+
+        Edge(int u, int v, double weight) {
+            this.u = u;
+            this.v = v;
+            this.weight = weight;
+        }
+
+        @Override
+        public int compareTo(Edge other) {
+            return Double.compare(this.weight, other.weight);
+        }
+    }
+
+    // Структура для хранения информации о компоненте
+    private class Component {
+        int parent;
+        int size;
+        double threshold;
+
+        Component(int parent, int size, double threshold) {
+            this.parent = parent;
+            this.size = size;
+            this.threshold = threshold;
+        }
     }
 }

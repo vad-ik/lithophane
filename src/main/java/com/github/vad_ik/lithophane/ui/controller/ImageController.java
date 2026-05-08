@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
 
 @Getter
 @Component
@@ -15,15 +14,16 @@ public class ImageController {
     private final Image originalImage = createImage();
     private final Image prepareImage = createImage();
 
-    public void setOriginalImage(String dataUri ){
-        setImage(originalImage,dataUri );
-    }
-    public void setPrepareImage(String dataUri ){
-        setImage(prepareImage,dataUri );
+    public void setOriginalImage(String dataUri) {
+        setImage(originalImage, dataUri);
     }
 
-    private void setImage(Image image, String dataUri ) {
-        image.setSrc(dataUri );
+    public void setPrepareImage(String dataUri) {
+        setImage(prepareImage, dataUri);
+    }
+
+    private void setImage(Image image, String dataUri) {
+        image.setSrc(dataUri);
     }
 
     private Image createImage() {

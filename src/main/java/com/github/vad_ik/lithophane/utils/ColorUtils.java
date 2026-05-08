@@ -10,7 +10,7 @@ public class ColorUtils {
     }
 
     public static String colorKey(double[] c) {
-        return (int)c[0] + "_" + (int)c[1] + "_" + (int)c[2];
+        return (int) c[0] + "_" + (int) c[1] + "_" + (int) c[2];
     }
 
     public static double[] parseColor(String key) {

@@ -4,49 +4,18 @@ import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
-import org.opencv.core.*;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.github.vad_ik.lithophane.utils.ExceptionUtils.throwIfNumberOfParametersIsNotEqual;
 
 @Slf4j
 @Service
 public class SLIC_Superpixels implements MethodsGen {
-
-    @Override
-    public String getName() {
-        return "Метод SLIC_Superpixels";
-    }
-
-    @Override
-    public ArrayList<MethodsParam> getParams() {
-        ArrayList<MethodsParam> params = new ArrayList<>(1);
-        params.add(new MethodsParam(0, 1000, 1, false, "regionSize", 25));
-        params.add(new MethodsParam(0, 1000, 0.1, true, "ruler", 5));
-        params.add(new MethodsParam(0, 1000, 1, false, "mergeThreshold", 15));
-        return params;
-    }
-
-    @Override
-    public Type getType() {
-        return Type.segmentations;
-    }
-
-
-    public Mat apply(Mat img, ArrayList<MethodsParam> params) {
-        int regionSize = (int) params.get(0).getVal(); // spatial radius
-        float m = (float) params.get(1).getVal(); // color radius
-        int iterations = (int) params.get(2).getVal() ;
-
-       return slic(img, regionSize, m, iterations);
-
-    }
 
     public static Mat slic(Mat input, int regionSize, float m, int iterations) {
         Mat lab = new Mat();
@@ -103,11 +72,11 @@ public class SLIC_Superpixels implements MethodsGen {
                         double dc1 = color[1] - c[1];
                         double dc2 = color[2] - c[2];
 
-                        double dColor = dc0*dc0 + dc1*dc1 + dc2*dc2;
+                        double dColor = dc0 * dc0 + dc1 * dc1 + dc2 * dc2;
 
                         double dx = x - cx;
                         double dy = y - cy;
-                        double dSpace = dx*dx + dy*dy;
+                        double dSpace = dx * dx + dy * dy;
 
                         double D = dColor + invWT * dSpace;
 
@@ -148,8 +117,8 @@ public class SLIC_Superpixels implements MethodsGen {
                 centers.get(k)[1] = sumColor[k][1] / count[k];
                 centers.get(k)[2] = sumColor[k][2] / count[k];
 
-                centerXY.get(k)[0] = (int)(sumXY[k][0] / count[k]);
-                centerXY.get(k)[1] = (int)(sumXY[k][1] / count[k]);
+                centerXY.get(k)[0] = (int) (sumXY[k][0] / count[k]);
+                centerXY.get(k)[1] = (int) (sumXY[k][1] / count[k]);
             }
 
             distances.setTo(new Scalar(Double.MAX_VALUE));
@@ -191,5 +160,32 @@ public class SLIC_Superpixels implements MethodsGen {
         Imgproc.cvtColor(resultLab, result, Imgproc.COLOR_Lab2BGR);
 
         return result;
+    }
+
+    @Override
+    public String getName() {
+        return "Метод SLIC_Superpixels";
+    }
+
+    @Override
+    public ArrayList<MethodsParam> getParams() {
+        ArrayList<MethodsParam> params = new ArrayList<>(1);
+        params.add(new MethodsParam(0, 1000, 1, false, "regionSize", 25));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "ruler", 5));
+        params.add(new MethodsParam(0, 1000, 1, false, "mergeThreshold", 15));
+        return params;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.segmentations;
+    }
+
+    public Mat apply(Mat img, ArrayList<MethodsParam> params) {
+        int regionSize = (int) params.get(0).getVal(); // spatial radius
+        float m = (float) params.get(1).getVal(); // color radius
+        int iterations = (int) params.get(2).getVal();
+
+        return slic(img, regionSize, m, iterations);
     }
 }

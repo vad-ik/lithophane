@@ -7,6 +7,7 @@ import org.opencv.core.Mat;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+
 @Service
 public class VoidMethod implements MethodsGen {
     @Override

@@ -29,8 +29,8 @@ public class MedianFilter implements MethodsGen {
 
     @Override
     public ArrayList<MethodsParam> getParams() {
-        ArrayList<MethodsParam> params=new ArrayList<>(1);
-        params.add(new MethodsParam(1,1001,2,false,"Ширина окна",5));
+        ArrayList<MethodsParam> params = new ArrayList<>(1);
+        params.add(new MethodsParam(1, 1001, 2, false, "Ширина окна", 5));
         return params;
     }
 
@@ -38,11 +38,11 @@ public class MedianFilter implements MethodsGen {
      * @param original обрабатываемое изображение
      * @param h        ширина и высота окна для фильтрации//должен быть нечетным
      **/
-    public Mat apply(Mat original, ArrayList<MethodsParam> params ) {
-        throwIfNumberOfParametersIsNotEqual(params,1, getName());
-        int h=(int) params.get(0).getVal();
+    public Mat apply(Mat original, ArrayList<MethodsParam> params) {
+        throwIfNumberOfParametersIsNotEqual(params, 1, getName());
+        int h = (int) params.get(0).getVal();
         if (h <= 0 || h % 2 != 1) {
-            log.error("получены некоректные данные для медианного фильтра {}",h);
+            log.error("получены некоректные данные для медианного фильтра {}", h);
         }
         Imgproc.medianBlur(original, original, h);
         return original;

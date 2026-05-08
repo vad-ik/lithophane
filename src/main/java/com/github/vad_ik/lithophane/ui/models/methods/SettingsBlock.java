@@ -2,14 +2,11 @@ package com.github.vad_ik.lithophane.ui.models.methods;
 
 import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
-import com.github.vad_ik.lithophane.models.methods.Type;
 import com.github.vad_ik.lithophane.service.methods.VoidMethod;
 import com.github.vad_ik.lithophane.ui.models.SettingsPanel;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,11 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -34,9 +27,8 @@ public class SettingsBlock extends VerticalLayout {
     private final ComboBox<MethodsGen> comboBox = new ComboBox<>("Метод");
     private final VerticalLayout methodSettings = new VerticalLayout();
     private final SettingsBlockBuilder blockBuilder;
-    private ArrayList<MethodsParam> params;
-
     private final List<MethodsGen> methods;
+    private ArrayList<MethodsParam> params;
     @Getter
     @Setter
     private SettingsPanel parentPanel;
@@ -107,20 +99,17 @@ public class SettingsBlock extends VerticalLayout {
 
     public Mat apply(Mat activeImage) {
         if (comboBox.getValue() != null) {
-            Long time =System.currentTimeMillis();
+            Long time = System.currentTimeMillis();
             log.info("метод {} начал работу", getActiveMethod().getName());
-            Mat ans= comboBox.getValue().apply(activeImage, params);
-            log.info("метод {} закончил работу за {} с", getActiveMethod().getName(),(System.currentTimeMillis()-time)/1000.0);
+            Mat ans = comboBox.getValue().apply(activeImage, params);
+            log.info("метод {} закончил работу за {} с", getActiveMethod().getName(), (System.currentTimeMillis() - time) / 1000.0);
             return ans;
         }
-        log.error("метод {} вернул нулевой результат",getActiveMethod().getName());
+        log.error("метод {} вернул нулевой результат", getActiveMethod().getName());
         throw new RuntimeException("Неверный блок настроек");
-
     }
 
     public MethodsGen getActiveMethod() {
         return comboBox.getValue();
     }
-
-
 }

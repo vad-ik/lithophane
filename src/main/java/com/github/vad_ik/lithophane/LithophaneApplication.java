@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class LithophaneApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(LithophaneApplication.class, args);
-	}
-
+    static void main(String[] args) {
+        SpringApplication.run(LithophaneApplication.class, args);
+    }
 }

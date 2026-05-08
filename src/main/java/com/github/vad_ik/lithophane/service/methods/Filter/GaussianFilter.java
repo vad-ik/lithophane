@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 import static com.github.vad_ik.lithophane.utils.ExceptionUtils.throwIfNumberOfParametersIsNotEqual;
-import static com.github.vad_ik.lithophane.utils.VaadinUtils.getNumberField;
 
 @Service
 @Slf4j
@@ -30,12 +29,12 @@ public class GaussianFilter implements MethodsGen {
 
     @Override
     public ArrayList<MethodsParam> getParams() {
-        ArrayList<MethodsParam> params=new ArrayList<>(4);
-        params.add(new MethodsParam(1,1001,2,false,"Высота окна",5));
-        params.add(new MethodsParam(1,1001,2,false,"Ширина окна",5));
+        ArrayList<MethodsParam> params = new ArrayList<>(4);
+        params.add(new MethodsParam(1, 1001, 2, false, "Высота окна", 5));
+        params.add(new MethodsParam(1, 1001, 2, false, "Ширина окна", 5));
 
-        params.add(new MethodsParam(0,1000,0.1,true,"Стандартное отклонение по x",0));
-        params.add(new MethodsParam(0,1000,0.1,true,"Стандартное отклонение по y",0));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "Стандартное отклонение по x", 0));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "Стандартное отклонение по y", 0));
         return params;
     }
 
@@ -49,14 +48,14 @@ public class GaussianFilter implements MethodsGen {
      **/
     public Mat apply(Mat original, ArrayList<MethodsParam> params) {
 
-        throwIfNumberOfParametersIsNotEqual(params,4, getName());
-        int w=(int) params.get(0).getVal();
-         int h=(int) params.get(1).getVal();
-         double sigmaX= params.get(2).getVal();
-         double sigmaY= params.get(3).getVal();
+        throwIfNumberOfParametersIsNotEqual(params, 4, getName());
+        int w = (int) params.get(0).getVal();
+        int h = (int) params.get(1).getVal();
+        double sigmaX = params.get(2).getVal();
+        double sigmaY = params.get(3).getVal();
 
         if (w <= 0 || w % 2 != 1 || h <= 0 || h % 2 != 1) {
-            log.error("получены некоректные данные для Гауссовского фильтра {},{},{},{}",w,h,sigmaX,sigmaY);
+            log.error("получены некоректные данные для Гауссовского фильтра {},{},{},{}", w, h, sigmaX, sigmaY);
         }
         Imgproc.GaussianBlur(original, original, new Size(w, h), sigmaX, sigmaY);
         return original;

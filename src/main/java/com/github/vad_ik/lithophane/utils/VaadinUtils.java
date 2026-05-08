@@ -34,7 +34,7 @@ public class VaadinUtils {
         if (param.getMin() != null) field.setMin(param.getMin());
         if (param.getMax() != null) field.setMax(param.getMax());
         field.setValue(param.getDefaultValue());
-        param.setVal( param.getDefaultValue());
+        param.setVal(param.getDefaultValue());
         field.setStep(param.getStep());
         field.addValueChangeListener(e -> {
             if (e.isFromClient() && field.isInvalid()) {

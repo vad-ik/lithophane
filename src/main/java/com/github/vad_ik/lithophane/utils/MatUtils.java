@@ -1,6 +1,5 @@
 package com.github.vad_ik.lithophane.utils;
 
-import com.vaadin.flow.component.html.Image;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;

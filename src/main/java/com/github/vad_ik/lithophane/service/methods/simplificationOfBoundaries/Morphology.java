@@ -19,6 +19,7 @@ public class Morphology implements MethodsGen {
     public String getName() {
         return "Morphology";
     }
+
     @Override
     public Type getType() {
         return Type.simplificationOfBoundaries;

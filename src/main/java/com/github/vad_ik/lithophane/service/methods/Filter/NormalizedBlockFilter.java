@@ -31,9 +31,9 @@ public class NormalizedBlockFilter implements MethodsGen {
 
     @Override
     public ArrayList<MethodsParam> getParams() {
-        ArrayList<MethodsParam> params=new ArrayList<>(2);
-        params.add(new MethodsParam(0,1000,1,false,"Высота окна",5));
-        params.add(new MethodsParam(0,1000,1,false,"Ширина окна",5));
+        ArrayList<MethodsParam> params = new ArrayList<>(2);
+        params.add(new MethodsParam(0, 1000, 1, false, "Высота окна", 5));
+        params.add(new MethodsParam(0, 1000, 1, false, "Ширина окна", 5));
         return params;
     }
 
@@ -44,7 +44,7 @@ public class NormalizedBlockFilter implements MethodsGen {
      **/
     public Mat apply(Mat original, ArrayList<MethodsParam> params) {//w,h - ширина и высота окна для фильтрации
 
-        throwIfNumberOfParametersIsNotEqual(params,2, getName());
+        throwIfNumberOfParametersIsNotEqual(params, 2, getName());
         int w = (int) params.get(0).getVal();
         int h = (int) params.get(1).getVal();
 
