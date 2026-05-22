@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods.simplificationOfBoundaries;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
@@ -16,7 +16,7 @@ import static com.github.vad_ik.lithophane.utils.ColorUtils.parseColor;
 
 @Slf4j
 @Service
-public class Majority implements MethodsGen {
+public class Majority implements ProcessingMethod {
 
     @Override
     public String getName() {

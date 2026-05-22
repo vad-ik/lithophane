@@ -4,7 +4,7 @@ import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 
-public interface MethodsGen {
+public interface ProcessingMethod {
     String getName();
 
     Type getType();

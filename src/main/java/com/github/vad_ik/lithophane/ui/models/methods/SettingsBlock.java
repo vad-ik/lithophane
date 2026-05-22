@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.ui.models.methods;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.service.methods.VoidMethod;
 import com.github.vad_ik.lithophane.ui.models.SettingsPanel;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -11,7 +11,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.opencv.core.Mat;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,16 +23,18 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SettingsBlock extends VerticalLayout {
 
-    private final ComboBox<MethodsGen> comboBox = new ComboBox<>("Метод");
+    @Getter
+    private final ComboBox<ProcessingMethod> comboBox = new ComboBox<>("Метод");
     private final VerticalLayout methodSettings = new VerticalLayout();
     private final SettingsBlockBuilder blockBuilder;
-    private final List<MethodsGen> methods;
+    private final List<ProcessingMethod> methods;
+    @Getter
     private ArrayList<MethodsParam> params;
     @Getter
     @Setter
     private SettingsPanel parentPanel;
 
-    public SettingsBlock(SettingsBlockBuilder blockBuilder, List<MethodsGen> methods) {
+    public SettingsBlock(SettingsBlockBuilder blockBuilder, List<ProcessingMethod> methods) {
         this.blockBuilder = blockBuilder;
         this.methods = methods.stream()
                 .sorted((a, b) -> {
@@ -56,7 +57,7 @@ public class SettingsBlock extends VerticalLayout {
 
     private void initChangeMethodSettings() {
         comboBox.setItems(methods);
-        comboBox.setItemLabelGenerator(MethodsGen::getName);
+        comboBox.setItemLabelGenerator(ProcessingMethod::getName);
         comboBox.setRenderer(new ComponentRenderer<>(item -> {
             VerticalLayout layout = new VerticalLayout();
             layout.setPadding(false);
@@ -97,19 +98,7 @@ public class SettingsBlock extends VerticalLayout {
         });
     }
 
-    public Mat apply(Mat activeImage) {
-        if (comboBox.getValue() != null) {
-            Long time = System.currentTimeMillis();
-            log.info("метод {} начал работу", getActiveMethod().getName());
-            Mat ans = comboBox.getValue().apply(activeImage, params);
-            log.info("метод {} закончил работу за {} с", getActiveMethod().getName(), (System.currentTimeMillis() - time) / 1000.0);
-            return ans;
-        }
-        log.error("метод {} вернул нулевой результат", getActiveMethod().getName());
-        throw new RuntimeException("Неверный блок настроек");
-    }
-
-    public MethodsGen getActiveMethod() {
+    public ProcessingMethod getActiveMethod() {
         return comboBox.getValue();
     }
 }

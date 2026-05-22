@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods.segmentations;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.CvType;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class Felzenszwalb implements MethodsGen {
+public class Felzenszwalb implements ProcessingMethod {
 
     @Override
     public String getName() {
@@ -31,9 +31,9 @@ public class Felzenszwalb implements MethodsGen {
     @Override
     public ArrayList<MethodsParam> getParams() {
         ArrayList<MethodsParam> params = new ArrayList<>(1);
-        params.add(new MethodsParam(0, 100, 0.1, true, "параметр размытия Гаусса, уменьшает шум", 2.5));
-        params.add(new MethodsParam(0, 1000, 0.1, true, "размер сегментов (чем больше k, тем крупнее сегменты)", 200));
-        params.add(new MethodsParam(0, 1000, 1, false, "минимальный размер сегмента", 50));
+        params.add(new MethodsParam(0, 100, 0.1, true, "параметр размытия Гаусса, уменьшает шум", 0.5));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "размер сегментов (чем больше k, тем крупнее сегменты)", 20));
+        params.add(new MethodsParam(0, 1000, 1, false, "минимальный размер сегмента", 5));
         return params;
     }
 

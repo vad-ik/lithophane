@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods.simplificationOfBoundaries;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @Slf4j
 @Service
-public class Morphology implements MethodsGen {
+public class Morphology implements ProcessingMethod {
 
     @Override
     public String getName() {

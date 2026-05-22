@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods.Filter;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
@@ -14,7 +14,7 @@ import static com.github.vad_ik.lithophane.utils.ExceptionUtils.throwIfNumberOfP
 
 @Service
 @Slf4j
-public class MedianFilter implements MethodsGen {
+public class MedianFilter implements ProcessingMethod {
 
 
     @Override

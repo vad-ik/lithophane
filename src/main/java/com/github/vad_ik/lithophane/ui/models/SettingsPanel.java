@@ -1,5 +1,7 @@
 package com.github.vad_ik.lithophane.ui.models;
 
+import com.github.vad_ik.lithophane.models.methods.PipelineStep;
+import com.github.vad_ik.lithophane.service.methods.ApplyingMethodsService;
 import com.github.vad_ik.lithophane.ui.controller.ImageController;
 import com.github.vad_ik.lithophane.ui.models.methods.SettingsBlock;
 import com.github.vad_ik.lithophane.utils.MatUtils;
@@ -11,14 +13,17 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.server.streams.InMemoryUploadHandler;
 import com.vaadin.flow.server.streams.UploadHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -26,29 +31,35 @@ import java.util.ArrayList;
 public class SettingsPanel extends VerticalLayout {
     private final ArrayList<SettingsBlock> settingsBlocks = new ArrayList<>();
     private final VerticalLayout methods = new VerticalLayout();
+    private final ApplyingMethodsService applyingMethodsService;
     private ImageController imageController;
     @Autowired
     private ObjectProvider<SettingsBlock> settingsBlockProvider;
     private Anchor downloadLink;
+    private BufferedImage bufferedImage;
 
-    private Mat activeImage;
+    public SettingsPanel(ApplyingMethodsService applyingMethodsService) {
+        this.applyingMethodsService = applyingMethodsService;
+    }
 
-    public void initSettingsPanel(ImageController imageController) {
+    public void initSettingsPanel(ImageController imageController) throws IOException {
 
         this.imageController = imageController;
         initUploadButton();
         initSaveButton();
         addSettingsBlock();
         initActiveButton();
-        activeImage = Imgcodecs.imread("src/main/resources/static/image/void.jpg");
+
+        File img = new File("src/main/resources/static/image/void.jpg");
+        bufferedImage = ImageIO.read(img);
     }
 
     private void initUploadButton() {
         InMemoryUploadHandler inMemoryHandler = UploadHandler
                 .inMemory((metadata, data) -> {
 
-                    activeImage = MatUtils.convertPngBytesToMat(data);
-                    imageController.setOriginalImage(MatUtils.convertMatToVaadinImage(activeImage));
+                    bufferedImage = MatUtils.convertPngBytesToBufferedImage(data);
+                    imageController.setOriginalImage(MatUtils.convertBufferedImageToVaadinImage(bufferedImage));
                     log.info("загружено новое фото");
                 });
         Upload upload = new Upload(inMemoryHandler);
@@ -67,18 +78,13 @@ public class SettingsPanel extends VerticalLayout {
     private void initActiveButton() {
         Button active = new Button("Применить");
         active.addClickListener(_ -> {
-            Mat image = activeImage.clone();
-            for (SettingsBlock settingsBlock : settingsBlocks) {
-                if (settingsBlock.getParentPanel() == null || settingsBlock.getActiveMethod() == null) {
-                    continue;
-                }
-                Mat newImage = settingsBlock.apply(image);
-                image.release();
-                image = newImage;
-            }
 
-            imageController.setPrepareImage(MatUtils.convertMatToVaadinImage(image));
-            image.release();
+
+            List<PipelineStep> methods = settingsBlocks.stream().filter(e -> e.getActiveMethod() != null)
+                    .map(e -> new PipelineStep(e.getComboBox().getValue(), e.getParams())).toList();
+
+            imageController.setPrepareImage(applyingMethodsService.apply(bufferedImage, methods));
+
             downloadLink.getElement().setAttribute("href",
                     imageController.getPrepareImage().getSrc()
             );

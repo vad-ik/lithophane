@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods.segmentations;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 @Slf4j
 @Service
-public class MeanShiftProcessor implements MethodsGen {
+public class MeanShiftProcessor implements ProcessingMethod {
 
     @Override
     public String getName() {

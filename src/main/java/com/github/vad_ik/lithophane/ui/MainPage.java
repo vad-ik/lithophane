@@ -6,11 +6,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 @Route("")
 @Slf4j
 public class MainPage extends HorizontalLayout {
 
-    public MainPage(SettingsPanel settingsPanel, ImageController imageController) {
+    public MainPage(SettingsPanel settingsPanel, ImageController imageController) throws IOException {
         log.info("открыта страница");
         settingsPanel.initSettingsPanel(imageController);
         add(settingsPanel, imageController.getOriginalImage(), imageController.getPrepareImage());

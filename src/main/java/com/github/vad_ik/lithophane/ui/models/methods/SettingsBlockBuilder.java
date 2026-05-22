@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.ui.models.methods;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import static com.github.vad_ik.lithophane.utils.VaadinUtils.getNumberField;
 @Service
 public class SettingsBlockBuilder {
 
-    public VerticalLayout build(MethodsGen method, ArrayList<MethodsParam> params) {
+    public VerticalLayout build(ProcessingMethod method, ArrayList<MethodsParam> params) {
 
         VerticalLayout layout = new VerticalLayout();
         for (MethodsParam param : params) {

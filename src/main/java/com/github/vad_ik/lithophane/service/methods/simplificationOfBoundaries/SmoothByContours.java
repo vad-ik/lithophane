@@ -1,20 +1,23 @@
 package com.github.vad_ik.lithophane.service.methods.simplificationOfBoundaries;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.github.vad_ik.lithophane.utils.ColorUtils.*;
 
 @Slf4j
 @Service
-public class SmoothByContours implements MethodsGen {
+public class SmoothByContours implements ProcessingMethod {
 
     @Override
     public String getName() {

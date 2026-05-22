@@ -1,2 +1,11 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+# Игнорируем сгенерированный JS при подсчете языка
+node_modules/* linguist-vendored
+frontend/generated/* linguist-vendored
+target/* linguist-vendored
+build/* linguist-vendored
+.vite/* linguist-vendored
+
+# Явно указываем, что основной язык - Java
+*.java linguist-language=Java

@@ -1,7 +1,7 @@
 package com.github.vad_ik.lithophane.service.methods.segmentations;
 
-import com.github.vad_ik.lithophane.models.methods.MethodsGen;
 import com.github.vad_ik.lithophane.models.methods.MethodsParam;
+import com.github.vad_ik.lithophane.models.methods.ProcessingMethod;
 import com.github.vad_ik.lithophane.models.methods.Type;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.CvType;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class SLIC_Superpixels implements MethodsGen {
+public class SLIC_Superpixels implements ProcessingMethod {
 
     public static Mat slic(Mat input, int regionSize, float m, int iterations) {
         Mat lab = new Mat();
@@ -170,9 +170,9 @@ public class SLIC_Superpixels implements MethodsGen {
     @Override
     public ArrayList<MethodsParam> getParams() {
         ArrayList<MethodsParam> params = new ArrayList<>(1);
-        params.add(new MethodsParam(0, 1000, 1, false, "regionSize", 25));
-        params.add(new MethodsParam(0, 1000, 0.1, true, "ruler", 5));
-        params.add(new MethodsParam(0, 1000, 1, false, "mergeThreshold", 15));
+        params.add(new MethodsParam(0, 1000, 1, false, "regionSize", 50));
+        params.add(new MethodsParam(0, 1000, 0.1, true, "ruler (чем больше, тем сильнее сглаживание, чем меньше, тем больше деталей)", 30));
+        params.add(new MethodsParam(0, 1000, 1, false, "mergeThreshold (объединение областей, если слишком маленький, появляются отчетливые квадраты, выглядящие как артефакты)", 300));
         return params;
     }
 
